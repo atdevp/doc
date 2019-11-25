@@ -1,5 +1,5 @@
 
-# Socket编程server端
+# Socket
 
 
 ### 1、socket涉及的一些函数
@@ -35,20 +35,24 @@ while True:
         sock.send("server already read data".encode('utf8'))
         
 server.close()
+```
 
 
 ### client端
 ```
-
 import socket
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(("127.0.0.1", 8080))
 
-for num in range(1001):
-    client.send(str(num).encode('utf8'))
+while True:
+    inp = input('>>>')
+    client.send(bytes(inp, 'utf8'))
     data = client.recv(1024)
     print(data.decode('utf8'))
+    if inp == "Q":
+        break
+
 client.close()
 
 ```
