@@ -13,6 +13,7 @@ while True:
         if not data:
             break
         sock.send("server already read data".encode('utf8'))
+        
 server.close()
 
 
