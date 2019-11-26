@@ -1,5 +1,17 @@
 # golang 文件操作
 
+<!-- TOC -->
+
+- [golang 文件操作](#golang-%e6%96%87%e4%bb%b6%e6%93%8d%e4%bd%9c)
+	- [打开、关闭文件f](#%e6%89%93%e5%bc%80%e5%85%b3%e9%97%ad%e6%96%87%e4%bb%b6f)
+	- [Read方法构建切片读取数据](#read%e6%96%b9%e6%b3%95%e6%9e%84%e5%bb%ba%e5%88%87%e7%89%87%e8%af%bb%e5%8f%96%e6%95%b0%e6%8d%ae)
+	- [bufio构建reader](#bufio%e6%9e%84%e5%bb%bareader)
+	- [Reader的几种读取数据的方法](#reader%e7%9a%84%e5%87%a0%e7%a7%8d%e8%af%bb%e5%8f%96%e6%95%b0%e6%8d%ae%e7%9a%84%e6%96%b9%e6%b3%95)
+	- [全量读取小文件](#%e5%85%a8%e9%87%8f%e8%af%bb%e5%8f%96%e5%b0%8f%e6%96%87%e4%bb%b6)
+
+<!-- /TOC -->
+
+
 ## 打开、关闭文件f
 ```
 package main
@@ -137,5 +149,22 @@ func main() {
 	}
   ```
 
+## 全量读取小文件
+```
+package main
 
+import (
+	"fmt"
+	"io/ioutil"
+)
+
+func main() {
+	buf, err := ioutil.ReadFile("/etc/hosts")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(string(buf))
+}
+```
 
