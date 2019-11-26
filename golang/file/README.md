@@ -117,7 +117,7 @@ func main() {
 * ReadLine
   ```
    一般不用这个，为啥呢？
-   readline方法有3个返回值，line， isPrefix, err，不是使用ReadSlice实现的。\n当一条数据很大时，就会被切割分割成两次或者多次传输，isPrefix为true时代表切割了，第二次传输剩下的数据。这里不再演示；
+   readline方法有3个返回值，line， isPrefix, err，不是使用ReadSlice实现的。当一条数据很大时，就会被切割分割成两次或者多次传输，isPrefix为true时代表切割了，第二次传输剩下的数据。这里不再演示；
   
   ```
 * ReadString
