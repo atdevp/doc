@@ -19,7 +19,7 @@ func main() {
 }
 ```
 
-## 循环读取文件
+## f.Read()
 #### func (f *File) Read(b []byte) (n int, err error)
 ```
 package main
