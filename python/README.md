@@ -1,22 +1,13 @@
+# Python实践
+<!-- TOC -->
 
-# Socket
+- [Python实践](#python%e5%ae%9e%e8%b7%b5)
+  - [socket 编程简单构造](#socket-%e7%bc%96%e7%a8%8b%e7%ae%80%e5%8d%95%e6%9e%84%e9%80%a0)
 
+<!-- /TOC -->
 
-### 1、socket涉及的一些函数
-```
-socket()
-bind()
-listen()
-accept()
-connect()
-connect_ex()
-send()
-recv()
-close()
-
-```
-
-### server端
+## socket 编程简单构造
+* server.py
 ```
 import socket
 
@@ -36,9 +27,8 @@ while True:
         
 server.close()
 ```
-
-
-### client端
+* client.py
+  
 ```
 import socket
 
@@ -54,5 +44,4 @@ while True:
         break
 
 client.close()
-
 ```
