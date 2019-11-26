@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -14,18 +16,20 @@ func main() {
 	}
 	defer f.Close()
 
+	// 使用bufio模块读取文件, 构建reader
+	reader := bufio.NewReader(f)
 	for {
-		var buf = make([]byte, 1)
-		offset, err := f.Read(buf)
+		buf, err := reader.ReadSlice('\n')
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-		fmt.Printf(string(buf[:offset]))
 		if err == io.EOF {
 			fmt.Println("读完了")
 			break
 		}
+		sbuf := string(buf)
+		fmt.Println(strings.Split(sbuf, "\n")[0])
 	}
 
 }
