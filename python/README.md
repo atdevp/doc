@@ -1,10 +1,5 @@
 # Python实践
-<!-- TOC -->
 
-- [Python实践](#python%e5%ae%9e%e8%b7%b5)
-  - [socket 编程简单构造](#socket-%e7%bc%96%e7%a8%8b%e7%ae%80%e5%8d%95%e6%9e%84%e9%80%a0)
-
-<!-- /TOC -->
 
 ## socket 编程简单构造
 * server.py
@@ -44,4 +39,42 @@ while True:
         break
 
 client.close()
+```
+
+## 排序
+### 冒泡
+```
+def Sort(L):
+    if len(L) <= 1:
+        return L
+
+    for m in range(len(L)):
+        for n in range(m+1, len(L)):
+            if L[m] > L[n]:
+                L[m], L[n] = L[n], L[m]   
+    return L
+
+
+if __name__ == '__main__':
+    L = [2,1,0,38,39,3787,2098,10,88,2876,78]
+    print(Sort(L))
+```
+
+### 选择
+```
+def Sort(L):
+    if len(L) <= 1:
+        return L
+    for m in range(len(L)):
+        Min = m
+        for n in range(m+1, len(L)):
+            if L[Min] > L[n]:
+                Min = n
+        L[Min], L[m] = L[m], L[Min]
+    return L
+
+
+if __name__ == '__main__':
+    L = [2,1,0,38,39,3787,2098,10,88,2876,78]
+    print(Sort(L))
 ```
