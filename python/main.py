@@ -1,34 +1,88 @@
-# coding: utf-8
 
-def mergesort(L):
-    if len(L) <= 1:
-        return L
+
+class Node(object):
+    def __init__(self, elme):
+        self.elme = elme
+        self.next = None
     
-    mid = len(L) / 2
 
-    left = mergesort(L[:mid])
-    right = mergesort(L[mid:])
-
-    return merge(left, right)
-
-def merge(left, right):
-    result = []
-    m = 0
-    n = 0
-
+class SingleLinkedList(object):
+    def __init__(self):
+        self.head = None
     
-    while m < len(left) and n < len(right):
-        if left[m] < right[m]:
-            result.append(left[m])
-            m=m+1
-        else:
-            result.append(right[n])
-            n=n+1
+    def is_empty(self):
+        if self.head is None:
+            return True
+        return False
 
-    result += left[m:]
-    result += right[n:]
+    def append(self, elme):
+        node = Node(elme)
+        if self.is_empty():
+            self.head = node
+            return
+        
+        cursor = self.head
+        while cursor.next is not None:
+            cursor = cursor.next
+        cursor.next = node
+        return
 
-    return result
+    def terval(self):
+        res = []
+        if self.is_empty():
+            return res
+        
+        cursor = self.head
+        while cursor is not None:
+            res.append(cursor.elme)
+            cursor = cursor.next
+        return res
 
-L = [2,1,0,38,39,3787,2098,10,88,2876,78]
-print(mergesort(L))
+    def length(self):
+        num = 0
+        if self.is_empty():
+            return 0
+        cursor = self.head
+        while cursor is not None:
+            num+=1
+            cursor = cursor.next
+        return num
+
+    def reverse(self):
+        res = []
+        if self.is_empty():
+            return res
+        
+        phead = self.head
+        last = None
+
+        while phead:
+            tmp = phead.next
+            phead.next = last
+
+            last = phead
+            phead = tmp
+        
+        cursor = last
+        while cursor is not None:
+            res.append(cursor.elme)
+            cursor = cursor.next
+        return res
+
+
+
+
+singleLinkedList = SingleLinkedList()
+for i in range(1,11):
+    singleLinkedList.append(i)
+print(singleLinkedList.terval())
+print(singleLinkedList.length())
+print(singleLinkedList.reverse())
+
+
+
+
+
+
+
+        
