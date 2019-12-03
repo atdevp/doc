@@ -230,3 +230,6 @@ func main() {
 }
 ```
 
+### 全局变量控制goroutine
+
+
