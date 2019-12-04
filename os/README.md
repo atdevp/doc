@@ -6,7 +6,10 @@
     - [状态码](#%e7%8a%b6%e6%80%81%e7%a0%81)
     - [Header](#header)
   - [性能](#%e6%80%a7%e8%83%bd)
-    - [磁盘IO瓶颈](#%e7%a3%81%e7%9b%98io%e7%93%b6%e9%a2%88)
+    - [系统整体性能top](#%e7%b3%bb%e7%bb%9f%e6%95%b4%e4%bd%93%e6%80%a7%e8%83%bdtop)
+    - [内存瓶颈free](#%e5%86%85%e5%ad%98%e7%93%b6%e9%a2%88free)
+    - [内存瓶颈vmstat](#%e5%86%85%e5%ad%98%e7%93%b6%e9%a2%88vmstat)
+    - [磁盘IO瓶颈iostat](#%e7%a3%81%e7%9b%98io%e7%93%b6%e9%a2%88iostat)
 
 <!-- /TOC -->
 
@@ -82,7 +85,52 @@ access-control-allow-methods:
 ```
 
 ## 性能
-### 磁盘IO瓶颈
+### 系统整体性能top
+* 命令格式
+  > top
+
+  > 按大写M，表示按消耗内存从大到小排序
+
+  > 按大写P，表示按消耗CPU从大到小排序
+
+  > 按1 显示所有逻辑cpu核心状况
+
+```
+id: 如果很低，说明cpu空闲时间占比较低，存在cpu瓶颈
+wa: 等待io的cpu时间百分比，过高，说明io存在瓶颈
+
+top - 15:26:14 up 132 days,  3:56,  1 user,  load average: 27.33, 24.80, 23.36
+Tasks: 151 total,   1 running, 150 sleeping,   0 stopped,   0 zombie
+%Cpu(s): 93.4 us,  6.1 sy,  0.0 ni,  0.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.5 st
+KiB Mem : 16268160 total,   175792 free, 15887320 used,   205048 buff/cache
+KiB Swap: 16777212 total, 13967252 free,  2809960 used.    81156 avail Mem
+```
+
+### 内存瓶颈free
+```
+buffer: 接受的数据暂存buffer，异步落盘
+cache:  缓存，从磁盘读出，放到cache，提高下次读取效率
+```
+
+### 内存瓶颈vmstat
+* 命令格式
+> [V] [-n] [delay [count]]
+1. -V 打印版本
+2. -n 周期性循环输出，输出的头部信息只显示一次
+3. deplay 是两次输出之间的间隔
+4. count 输出几次
+
+* 案例1
+```
+[@abc_10_2 ~]# vmstat  -n 1 3
+procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 1  0      0 8434240  37000 242469072    0    0     1    43    0    0  2  1 97  0  0
+ 2  0      0 8432740  37000 242470896    0    0     0   343 44776 29615  2  1 97  0  0
+ 0  0      0 8431148  37000 242472496    0    0     0   118 43223 31910  2  1 97  0  0
+```
+
+### 磁盘IO瓶颈iostat
 * 命令格式
   > iostat [参数] [时间] [次数]
 
@@ -151,25 +199,25 @@ sdb               0.00     0.00    0.00    0.00     0.00     0.00     0.00     0
 >如果avgqu-sz比较大，说明存在大量io在等待
 
 * 显示TPS和设备吞吐量
-  ```
-  tps: 设备每秒的传输次数
-  kB_read/s: 每秒从设备读取的数量
-  kB_wrtn/s: 每秒从设备写入的数量
+```
+tps: 设备每秒的传输次数
+kB_read/s: 每秒从设备读取的数量
+kB_wrtn/s: 每秒从设备写入的数量
 
-  kB_read: 读取的总数据量
-  kB_wrtn: 写入的总数据量
+kB_read: 读取的总数据量
+kB_wrtn: 写入的总数据量
 
 
-  [@CentOS_bx_10_20 ~]# iostat -d -k 1 2
-    Linux 3.10.0-693.el7.x86_64 (CentOS_bx_10_20) 	2019年12月04日 	_x86_64_	(48 CPU)
+[@CentOS_bx_10_20 ~]# iostat -d -k 1 2
+Linux 3.10.0-693.el7.x86_64 (CentOS_bx_10_20) 	2019年12月04日 	_x86_64_	(48 CPU)
 
-    Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-    sda               0.25         0.18         2.00   11184192  121987855
-    sdb              29.57       475.83      2871.93 29030542184 175216334687
+Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+sda               0.25         0.18         2.00   11184192  121987855
+sdb              29.57       475.83      2871.93 29030542184 175216334687
 
-    Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-    sda               0.00         0.00         0.00          0          0
-    sdb               7.00         0.00       226.50          0        226
+Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
+sda               0.00         0.00         0.00          0          0
+sdb               7.00         0.00       226.50          0        226
 
-  ```
+```
 
