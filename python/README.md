@@ -81,38 +81,35 @@ if __name__ == '__main__':
 
 ### 归并
 ```
-def mergesort(L):
-    if len(L) <= 1:
-        return L
-    
-    mid = len(L) / 2
+def mergesort(l):
+    if len(l) <= 1:
+    ¦   return l
 
-    left = mergesort(L[:mid])
-    right = mergesort(L[mid:])
-
+    mid = len(l) / 2
+    left = mergesort(l[:mid])
+    right = mergesort(l[mid:])
     return merge(left, right)
 
+
 def merge(left, right):
-    result = []
     m = 0
     n = 0
-
-    
+    result = []
     while m < len(left) and n < len(right):
-        if left[m] < right[m]:
-            result.append(left[m])
-            m=m+1
-        else:
-            result.append(right[n])
-            n=n+1
+    ¦   if left[m] < right[n]:
+    ¦   ¦   result.append(left[m])
+    ¦   ¦   m += 1
+    ¦   else:
+    ¦   ¦   result.append(right[n])
+    ¦   ¦   n += 1
 
     result += left[m:]
     result += right[n:]
-
     return result
 
-L = [2,1,0,38,39,3787,2098,10,88,2876,78]
-print(mergesort(L))
+
+l = [12, 234, 345345, 456456, 29]
+print(mergesort(l))
 ```
 
 ## 数据结构-链表
