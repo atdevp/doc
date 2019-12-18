@@ -34,6 +34,9 @@
             - [删除map中指定key](#删除map中指定key)
             - [遍历map](#遍历map)
             - [清空map](#清空map)
+        - [结构体(struct)](#结构体struct)
+            - [定义结构体](#定义结构体)
+            - [实例化结构体](#实例化结构体)
 
 <!-- /TOC -->
 
@@ -484,6 +487,78 @@ func main() {
 ```
 go语言中没有提供任何清空所有元素的函数和方法。清空map的唯一办法是重新make一个新的map。不用担心垃圾回收的效率，因为效率很高。
 ```
+
+### 结构体(struct)
+```
+go语言使用结构体和结构成员来描述真实世界的事物以及这些事物的属性。go语言中的类型可以被实例化，使用new、"&"、var来进行实例化。
+```
+
+#### 定义结构体
+```
+type SafeMap struct {
+	sync.RWMutex
+	M map[int]int
+}
+
+type Person struct {
+	Name string
+	Age  int
+}
+```
+
+#### 实例化结构体
+```
+只有结构体被实例化了才会真正分配内存地址，所以只有实例化之后才能访问结构体中的字段。
+```
+1. var声明基本实例化形式
+```
+结构体本身是一类类型，所以可以像声明整型、字符串类型一样，使用var的方式声明，就完成了实例化
+var example string
+var p Person
+p.Name = "a"
+p.Age  = 27
+```
+2. new函数创建指针类型的实例化结构体
+```
+使用new关键字对类型(整型、字符型、结构体等)进行实例化。结构体在实例化后会形成指针类型的结构。
+格式： instance := new(T)
+instance的类型为*T，属于指针。
+
+p := new(Person)
+p.Name = "a"
+p.Age  = 27
+
+new实例化后的结构体实例和基本实例化的成员赋值方式写法完全一致。
+```
+3. &取地址符号实例化结构体
+```
+使用&对结构体操作时，被看作是对结构体进行了一次new的实例化操作。
+格式： instance := &T{}
+instance的类型为*T，属于指针。
+
+p := &Person{}
+p.Name = "a"
+p.Age  = 27
+```
+4. 函数封装map初始化流程
+```
+import (
+	"sync"
+)
+
+type SafeMap struct {
+	sync.RWMutex
+	M map[int]int
+}
+
+func newSafeMap(){
+	return &SafeMap{
+		M: make(map[int]int),
+	}
+}
+```
+
+
 
 
 
