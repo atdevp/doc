@@ -13,6 +13,7 @@
         - [全量读取小文件](#全量读取小文件)
     - [Goroutine](#goroutine)
         - [sync.WaitGroup 并发控制](#syncwaitgroup-并发控制)
+    - [golang中make和new的区别](#golang中make和new的区别)
     - [golang数据类型](#golang数据类型)
         - [数组](#数组)
             - [数组声明](#数组声明)
@@ -267,6 +268,16 @@ func main() {
 	wg.Wait()
 	fmt.Println("say task finish")
 }
+```
+
+## golang中make和new的区别
+> make函数只能初始化内建的数据类型(slice、map、chan)进行内存分配，且返回T类型。new函数用户各种类型的内存分配，且返回*T指针类型。
+
+```
+S := make([]string, 0, 10)
+M := make(map[int]string)
+C := make(chan int, 1000)
+STRUCT := new(T) or STRUCT := &T{}
 ```
 
 ## golang数据类型
