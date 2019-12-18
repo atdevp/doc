@@ -1,5 +1,16 @@
 # Python实践
+<!-- TOC -->
 
+- [Python实践](#python%e5%ae%9e%e8%b7%b5)
+  - [socket 编程简单构造](#socket-%e7%bc%96%e7%a8%8b%e7%ae%80%e5%8d%95%e6%9e%84%e9%80%a0)
+  - [排序](#%e6%8e%92%e5%ba%8f)
+    - [冒泡](#%e5%86%92%e6%b3%a1)
+    - [选择](#%e9%80%89%e6%8b%a9)
+    - [归并](#%e5%bd%92%e5%b9%b6)
+  - [数据结构-链表](#%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84-%e9%93%be%e8%a1%a8)
+  - [TODO](#todo)
+
+<!-- /TOC -->
 
 ## socket 编程简单构造
 * server.py
@@ -195,3 +206,5 @@ print(singleLinkedList.terval())
 print(singleLinkedList.length())
 print(singleLinkedList.reverse())
 ```
+
+## TODO
