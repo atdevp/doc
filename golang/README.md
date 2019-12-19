@@ -42,6 +42,9 @@
         - [函数](#函数)
             - [在宕机时触发延迟语句](#在宕机时触发延迟语句)
             - [匿名函数](#匿名函数)
+    - [JSON、Golang内置数据类型转换](#jsongolang内置数据类型转换)
+        - [json转struct](#json转struct)
+        - [json转map](#json转map)
 
 <!-- /TOC -->
 
@@ -702,6 +705,113 @@ func main() {
 		fmt.Println(err)
 	}
 
+}
+```
+
+## JSON、Golang内置数据类型转换
+### json转struct
+1. json example
+```
+{
+    "company": {
+        "alibaba": {
+            "position": "hz",
+            "asset": ["taobao.com", "aliyun.com", "tmall.com"]
+        },
+        "sohu": {
+            "position": "bj",
+            "asset": ["sohuNews", "sohuTV", "sohuBlog"]
+        }
+    },
+    "db": {
+        "ip": "1.1.1.1",
+        "port": 3306,
+        "timeout": 10,
+        "user_name": "root",
+        "passwd": ""
+    }
+}
+```
+2. go
+```
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"github.com/atdevp/devlib/file"
+	"os"
+)
+
+type DBConfig struct {
+	IP       string `json:"ip"`
+	Port     int    `json:"port"`
+	Timeout  int    `json:"timeout"`
+	UserName string `json:"user_name"`
+	Passwd   string `json:"passwd"`
+}
+
+type GlobalConfig struct {
+	Company map[string]map[string]interface{} `json:"company"`
+	DB      *DBConfig                         `json:"db"`
+}
+
+func main() {
+	bs, err := file.ToBytes("cfg.json")
+	if err != nil {
+		panic("sdfsfsd")
+	}
+	var c GlobalConfig
+	err = json.Unmarshal(bs, &c)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+	fmt.Println(c.Company["alibaba"])
+}
+```
+
+### json转map
+1. json example
+```
+{
+    "company": {
+        "alibaba": {
+            "position": "hz",
+            "asset": ["taobao.com", "aliyun.com", "tmall.com"]
+        },
+        "sohu": {
+            "position": "bj",
+            "asset": ["sohuNews", "sohuTV", "sohuBlog"]
+        }
+    }
+}
+```
+2. go 
+```
+package main
+
+import (
+    "encoding/json"
+    "fmt"
+    "github.com/atdevp/devlib/file"
+    "os"
+)
+
+func main() {
+    bs, err := file.ToBytes("cfg.json")
+    if err != nil {
+        panic("sdfsfsd")
+    }
+
+    var m map[string]map[string]interface{}
+
+    err = json.Unmarshal(bs, &m)
+    if err != nil {
+        fmt.Println(err)
+        os.Exit(-1)
+    }
+    fmt.Println(m["company"]["sohu"])
 }
 ```
 
