@@ -19,17 +19,18 @@
             - [数组声明](#数组声明)
             - [初始化数组](#初始化数组)
             - [遍历数组](#遍历数组)
-        - [切片](#切片)
+        - [slice类型](#slice类型)
             - [切片声明](#切片声明)
             - [初始化切片](#初始化切片)
             - [make函数构造切片](#make函数构造切片)
             - [append函数添加元素至切片](#append函数添加元素至切片)
             - [切片复制](#切片复制)
             - [切片遍历](#切片遍历)
-        - [map](#map)
+        - [map类型](#map类型)
             - [map声明](#map声明)
             - [make函数构建map](#make函数构建map)
-            - [map赋值](#map赋值)
+            - [map声明后赋值](#map声明后赋值)
+            - [map初始化](#map初始化)
             - [map取值](#map取值)
             - [判断key是否存在](#判断key是否存在)
             - [删除map中指定key](#删除map中指定key)
@@ -38,6 +39,9 @@
         - [结构体(struct)](#结构体struct)
             - [定义结构体](#定义结构体)
             - [实例化结构体](#实例化结构体)
+        - [函数](#函数)
+            - [在宕机时触发延迟语句](#在宕机时触发延迟语句)
+            - [匿名函数](#匿名函数)
 
 <!-- /TOC -->
 
@@ -326,7 +330,7 @@ func main() {
 2 cname
 ```
 
-### 切片
+### slice类型
 ```
 动态分配大小的连续空间，在内存中和数组一样都是连续地址空间。
 ```
@@ -406,7 +410,7 @@ func main() {
 9 10
 ```
 
-### map
+### map类型
 ```
 golang中的map使用散列表hash实现，大多数域名中映射关系容器使用的是两种算法，散列表和平衡树。
 ```
@@ -420,11 +424,19 @@ var person = make(map[string]string)
 person := make(map[string]string)
 ```
 
-#### map赋值
+#### map声明后赋值
 ```
 person := make(map[string]string)
 person["a"] = "www.a.com"
 person["b"] = "www.b.com"
+```
+
+#### map初始化
+```
+person := map[string]string{
+	"a": "www.a.com",
+	"b": "www.b.com",
+}
 ```
 
 #### map取值
@@ -569,6 +581,129 @@ func newSafeMap(){
 }
 ```
 
+### 函数
+
+#### 在宕机时触发延迟语句
+```
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    defer fmt.Println("宕机后要做的事情1")
+    defer fmt.Println("宕机后要做的事情2")
+    panic("宕机")
+}
+输出:
+宕机后要做的事情2
+宕机后要做的事情1
+panic: 宕机
+
+goroutine 1 [running]:
+main.main()
+	/Users/lili/go/src/me/main.go:10 +0x140
+exit status 2
+```
+
+#### 匿名函数
+> 匿名函数没有函数名，只有函数体，可以赋值给一个变量
+
+1. 声明时调用匿名函数
+```
+func main() {
+    str := func(num int) string {
+        return fmt.Sprintf("num=%d", num)
+    }(100)
+
+    fmt.Println(str)
+}
+```
+2. 匿名函数赋值给变量
+```
+func main() {
+    f1 := func(num int) string {
+        return fmt.Sprintf("num=%d", num)
+    }
+
+    fmt.Println(f1(100))
+}
+```
+3. 匿名函数作为回调函数
+> 插曲什么是回调函数呢？
+
+> 当运行一个程序的时候，一般情况下，应用程序会通过API调用系统的库函数，但是有些库函数却要求要先给给它传入一个函数，方便它在合适时完成目标任务，这里被传入的、后又被调用的函数称之为回调函数。
+```
+
+func print(list []string, f func(s string)) {
+	for _, v := range(list) {
+		f(v)
+	}
+}
+
+func main(){
+	list := []string{"a", "b", "c", "d"}
+	var cb = func(s string){
+		fmt.Printf("name=%s\n",s)
+	}
+	print(list, cb)
+}
+```
+
+4. 封装匿名函数
+
+```
+package main
+
+import (
+	"errors"
+	"fmt"
+	"github.com/atdevp/devlib/file"
+)
+
+func mapper(key string) (func(filename string) error, bool) {
+
+	var mf = func(filename string) error {
+		_, err := file.Create(filename)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
+	var sf = func(filename string) error {
+		exist := file.IsExist(filename)
+		if !exist {
+
+			errMsg := fmt.Sprintf("%s is not existant", filename)
+			return errors.New(errMsg)
+		}
+		return nil
+	}
+
+	var m = map[string]func(filename string) error{
+		"master": mf,
+		"slave":  sf,
+	}
+
+	f, ok := m[key]
+
+	return f, ok
+}
+
+func main() {
+
+	t := "slave"
+	filename := "/tmp/mm.txt"
+	f, ok := mapper(t)
+	if ok {
+		err := f(filename)
+		fmt.Println(err)
+	}
+
+}
+```
 
 
 
