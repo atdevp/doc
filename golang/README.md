@@ -30,6 +30,7 @@
             - [删除map中指定key](#删除map中指定key)
             - [遍历map](#遍历map)
             - [清空map](#清空map)
+        - [HashMap](#hashmap)
         - [结构体(struct)](#结构体struct)
             - [定义结构体](#定义结构体)
             - [实例化结构体](#实例化结构体)
@@ -357,6 +358,100 @@ func main() {
 go语言中没有提供任何清空所有元素的函数和方法。清空map的唯一办法是重新make一个新的map。不用担心垃圾回收的效率，因为效率很高。
 ```
 
+### HashMap
+```
+package main
+
+import "log"
+
+type kv struct {
+	K string
+	V string
+}
+
+type LinkList struct {
+	Elme kv
+	Next *LinkList
+}
+
+func CreateLinkList() *LinkList {
+	return &LinkList{Elme: kv{"", ""}, Next: nil}
+}
+
+func (this *LinkList) AddElme(k string, v string) int {
+	elme := kv{k, v}
+
+	count := 0 //  在这处理了发生碰撞的情况
+	for this.Elme.K != "" && this.Elme.V != "" {
+		count++
+		this = this.Next
+	}
+	this.Elme = elme
+	this.Next = CreateLinkList()
+	log.Println("link cnt: ", count)
+	return count
+}
+
+const (
+	BucketCount = 256
+)
+
+type HashMap struct {
+	Bucket [BucketCount]*LinkList
+}
+
+func NewHashMap() *HashMap {
+	var m = &HashMap{}
+
+	for index := 0; index < BucketCount; index++ {
+		m.Bucket[index] = CreateLinkList()
+	}
+	return m
+}
+
+func hashCode(k string) int {
+	var num = 0
+	for i := 0; i < len(k); i++ {
+		num += int(k[i])
+	}
+
+	c := num % BucketCount
+	return c
+}
+
+func (this *HashMap) SET(k, v string) {
+	index := hashCode(k)
+	this.Bucket[index].AddElme(k, v)
+}
+
+func (this *HashMap) GET(k string) {
+	index := hashCode(k)
+	var v string
+	head := this.Bucket[index]
+	for {
+		if head.Elme.K == k {
+			v = head.Elme.V
+			break
+		} else {
+			head = head.Next
+		}
+	}
+	log.Println(v)
+}
+
+func main() {
+	m := NewHashMap()
+	m.SET("a", "1")
+	m.SET("a", "10")
+	m.SET("b", "2")
+	m.SET("c", "3")
+
+	m.GET("a")
+
+}
+
+
+```
 ### 结构体(struct)
 ```
 go语言使用结构体和结构成员来描述真实世界的事物以及这些事物的属性。go语言中的类型可以被实例化，使用new、"&"、var来进行实例化。
