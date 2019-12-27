@@ -30,7 +30,9 @@
             - [删除map中指定key](#删除map中指定key)
             - [遍历map](#遍历map)
             - [清空map](#清空map)
+        - [单链表](#单链表)
         - [HashMap](#hashmap)
+            - [链表法实现hashMap](#链表法实现hashmap)
         - [结构体(struct)](#结构体struct)
             - [定义结构体](#定义结构体)
             - [实例化结构体](#实例化结构体)
@@ -358,7 +360,118 @@ func main() {
 go语言中没有提供任何清空所有元素的函数和方法。清空map的唯一办法是重新make一个新的map。不用担心垃圾回收的效率，因为效率很高。
 ```
 
+### 单链表
+```
+package main
+
+import "log"
+
+func init() {
+	log.SetFlags(log.Ldate | log.Ltime | log.Llongfile)
+}
+
+type kv struct {
+	K string
+	V string
+}
+
+type LinkList struct {
+	Elme  kv
+	Next  *LinkList
+	Count int64
+}
+
+func InitLinkList() *LinkList {
+	return &LinkList{Elme: kv{"", ""}, Next: nil, Count: 0}
+}
+
+func (this *LinkList) IsEmpty() bool {
+
+	if this.Count == 0 {
+		return true
+	}
+	return false
+}
+
+func (this *LinkList) Length() int64 {
+	return this.Count
+}
+
+func (this *LinkList) Append(k, v string) int64 {
+	elme := kv{K: k, V: v}
+	if this.Count == 0 {
+		this.Elme, this.Count = elme, 1
+		return this.Count
+	}
+
+	cousor := this
+	for cousor.Next != nil {
+		cousor = cousor.Next
+	}
+	cousor.Next = &LinkList{Elme: elme, Next: nil}
+	this.Count = this.Count + 1
+	return this.Count
+}
+
+func (this *LinkList) Read(num int64) []*kv {
+
+	ret := make([]*kv, 0)
+
+	if this.Count == 0 {
+		return ret
+	}
+
+	if num > this.Count {
+		for this.Next != nil {
+			ret = append(ret, &this.Elme)
+			this = this.Next
+		}
+		return ret
+	}
+
+	var repeat int64 = 1
+	for repeat <= num {
+		ret = append(ret, &this.Elme)
+		this = this.Next
+		repeat++
+	}
+	return ret
+
+}
+
+func (this *LinkList) Front() *kv {
+	if this.Count == 0 {
+		return nil
+	}
+
+	return &this.Elme
+}
+
+func (this *LinkList) Reverse() *LinkList {
+	return this
+}
+
+func main() {
+
+	linkList := InitLinkList()
+
+	var list = []string{"a", "b", "c", "d", "e", "f", "g"}
+	for _, v := range list {
+		log.Println(v)
+		linkList.Append(v, v)
+	}
+
+	ret := linkList.Read(100)
+	for _, v := range ret {
+		log.Println(v.K, v.V)
+	}
+
+}
+
+```
+
 ### HashMap
+#### 链表法实现hashMap
 ```
 package main
 
