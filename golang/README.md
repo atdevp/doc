@@ -31,6 +31,7 @@
             - [遍历map](#遍历map)
             - [清空map](#清空map)
         - [单链表](#单链表)
+            - [单链表create、append、list方法](#单链表createappendlist方法)
         - [HashMap](#hashmap)
             - [链表法实现hashMap](#链表法实现hashmap)
         - [结构体(struct)](#结构体struct)
@@ -50,7 +51,6 @@
         - [全量读取小文件](#全量读取小文件)
 
 <!-- /TOC -->
-
 ## vscode golang 开发环境
 ### 安装go插件
 > commmand+shift+P
@@ -226,7 +226,7 @@ func main() {
     }
     var b = make([]int, len(a))
     copy(b, a)
-    fmt.Println(b)
+    fmt.Println(b)****
 }
 ```
 
@@ -361,113 +361,61 @@ go语言中没有提供任何清空所有元素的函数和方法。清空map的
 ```
 
 ### 单链表
+#### 单链表create、append、list方法
 ```
-package main
+package link
 
-import "log"
-
-func init() {
-	log.SetFlags(log.Ldate | log.Ltime | log.Llongfile)
+type LinkedHeroList struct {
+	No       int
+	Name     string
+	NickName string
+	Next     *LinkedHeroList
 }
 
-type kv struct {
-	K string
-	V string
+func NewLinkedHeroList() *LinkedHeroList {
+	return &LinkedHeroList{}
 }
 
-type LinkList struct {
-	Elme  kv
-	Next  *LinkList
-	Count int64
+func (this *LinkedHeroList) Append(node *LinkedHeroList) {
+	temp := this
+	for {
+		if temp.Next == nil {
+			break
+		}
+		temp = temp.Next
+	}
+
+	temp.Next = node
+
 }
 
-func InitLinkList() *LinkList {
-	return &LinkList{Elme: kv{"", ""}, Next: nil, Count: 0}
-}
-
-func (this *LinkList) IsEmpty() bool {
-
-	if this.Count == 0 {
+func (this *LinkedHeroList) IsEmpty() bool {
+	temp := this
+	if temp.Next == nil {
 		return true
 	}
 	return false
 }
 
-func (this *LinkList) Length() int64 {
-	return this.Count
-}
+func (this *LinkedHeroList) List() []*LinkedHeroList {
 
-func (this *LinkList) Append(k, v string) int64 {
-	elme := kv{K: k, V: v}
-	if this.Count == 0 {
-		this.Elme, this.Count = elme, 1
-		return this.Count
+	if this.IsEmpty() {
+		return []*LinkedHeroList{}
 	}
 
-	cousor := this
-	for cousor.Next != nil {
-		cousor = cousor.Next
-	}
-	cousor.Next = &LinkList{Elme: elme, Next: nil}
-	this.Count = this.Count + 1
-	return this.Count
-}
+	temp := this
 
-func (this *LinkList) Read(num int64) []*kv {
-
-	ret := make([]*kv, 0)
-
-	if this.Count == 0 {
-		return ret
-	}
-
-	if num > this.Count {
-		for this.Next != nil {
-			ret = append(ret, &this.Elme)
-			this = this.Next
+	ret := make([]*LinkedHeroList, 0)
+	for {
+		ret = append(ret, temp.Next)
+		temp = temp.Next
+		if temp.Next == nil {
+			break
 		}
-		return ret
 	}
 
-	var repeat int64 = 1
-	for repeat <= num {
-		ret = append(ret, &this.Elme)
-		this = this.Next
-		repeat++
-	}
 	return ret
-
 }
-
-func (this *LinkList) Front() *kv {
-	if this.Count == 0 {
-		return nil
-	}
-
-	return &this.Elme
-}
-
-func (this *LinkList) Reverse() *LinkList {
-	return this
-}
-
-func main() {
-
-	linkList := InitLinkList()
-
-	var list = []string{"a", "b", "c", "d", "e", "f", "g"}
-	for _, v := range list {
-		log.Println(v)
-		linkList.Append(v, v)
-	}
-
-	ret := linkList.Read(100)
-	for _, v := range ret {
-		log.Println(v.K, v.V)
-	}
-
-}
-
 ```
 
 ### HashMap
