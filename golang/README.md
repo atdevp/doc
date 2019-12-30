@@ -31,7 +31,7 @@
             - [遍历map](#遍历map)
             - [清空map](#清空map)
         - [单链表](#单链表)
-            - [单链表create、append、list方法](#单链表createappendlist方法)
+            - [单链表create、append、list、delete方法](#单链表createappendlistdelete方法)
         - [HashMap](#hashmap)
             - [链表法实现hashMap](#链表法实现hashmap)
         - [结构体(struct)](#结构体struct)
@@ -361,8 +361,103 @@ go语言中没有提供任何清空所有元素的函数和方法。清空map的
 ```
 
 ### 单链表
-#### 单链表create、append、list方法
+#### 单链表create、append、list、delete方法
+
 ```
+被调用：
+package link
+
+type LinkedHeroList struct {
+	No       int
+	Name     string
+	NickName string
+	Next     *LinkedHeroList
+}
+
+func NewLinkedHeroList() *LinkedHeroList {
+	return &LinkedHeroList{}
+}
+
+func (this *LinkedHeroList) Append(node *LinkedHeroList) {
+	temp := this
+	for {
+		if temp.Next == nil {
+			break
+		}
+		temp = temp.Next
+	}
+
+	temp.Next = node
+
+}
+
+func (this *LinkedHeroList) IsEmpty() bool {
+	temp := this
+	if temp.Next == nil {
+		return true
+	}
+	return false
+}
+
+func (this *LinkedHeroList) List() []*LinkedHeroList {
+
+	if this.IsEmpty() {
+		return []*LinkedHeroList{}
+	}
+
+	temp := this
+
+	ret := make([]*LinkedHeroList, 0)
+	for {
+		ret = append(ret, temp.Next)
+		temp = temp.Next
+		if temp.Next == nil {
+			break
+		}
+
+        }
+	}
+
+	return ret
+}
+
+func (this *LinkedHeroList) OrderInsert(node *LinkedHeroList) {
+	temp := this
+	// 思想是让插入的节点No,和temp的下一个节点No进行比较
+	for {
+		if temp.Next == nil {
+			break
+		}
+		if temp.Next.No >= node.No {
+			break
+		}
+		temp = temp.Next
+	}
+
+	node.Next = temp.Next
+	temp.Next = node
+}
+
+func (this *LinkedHeroList) Delete(no int) {
+	if this.IsEmpty() {
+		return
+	}
+
+	temp := this
+	for {
+		if temp.Next == nil {
+			return
+		}
+		if temp.Next.No == no {
+			break
+		}
+		temp = temp.Next
+
+	}
+	temp.Next = temp.Next.Next
+}
+ad:link ad$ vim link.go
+ad:link ad$ cat link.go
 package link
 
 type LinkedHeroList struct {
@@ -416,7 +511,110 @@ func (this *LinkedHeroList) List() []*LinkedHeroList {
 
 	return ret
 }
+
+func (this *LinkedHeroList) OrderInsert(node *LinkedHeroList) {
+	temp := this
+	// 思想是让插入的节点No,和temp的下一个节点No进行比较
+	for {
+		if temp.Next == nil {
+			break
+		}
+		if temp.Next.No >= node.No {
+			break
+		}
+		temp = temp.Next
+	}
+
+	node.Next = temp.Next
+	temp.Next = node
+}
+
+func (this *LinkedHeroList) Delete(no int) {
+	if this.IsEmpty() {
+		return
+	}
+
+	temp := this
+	// 思想是让插入的节点No,和temp的下一个节点No进行比较
+	for {
+		if temp.Next == nil {
+			return
+		}
+		if temp.Next.No == no {
+			break
+		}
+		temp = temp.Next
+
+	}
+	temp.Next = temp.Next.Next
+}
+
+调用者：
+package main
+
+import (
+	"link"
+	"log"
+)
+
+func init() {
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+}
+
+func main() {
+
+	singe := link.NewLinkedHeroList()
+
+	hero1 := &link.LinkedHeroList{
+		No:       1,
+		Name:     "宋江",
+		NickName: "及时雨",
+	}
+
+	hero2 := &link.LinkedHeroList{
+		No:       5,
+		Name:     "吴用",
+		NickName: "智多星",
+	}
+
+	hero3 := &link.LinkedHeroList{
+		No:       2,
+		Name:     "鲁智深",
+		NickName: "花和尚",
+	}
+
+	hero4 := &link.LinkedHeroList{
+		No:       6,
+		Name:     "卢俊义",
+		NickName: "玉麒麟",
+	}
+	hero5 := &link.LinkedHeroList{
+		No:       1000,
+		Name:     "林冲",
+		NickName: "豹子头",
+	}
+
+	singe.OrderInsert(hero1)
+	singe.OrderInsert(hero2)
+	singe.OrderInsert(hero3)
+	singe.OrderInsert(hero4)
+	singe.OrderInsert(hero5)
+
+	ret := singe.List()
+	for _, v := range ret {
+		log.Printf("no=%d, name=%s, nickname=%s", v.No, v.Name, v.NickName)
+	}
+
+	singe.Delete(1000)
+
+	ret = singe.List()
+	for _, v := range ret {
+		log.Printf("no=%d, name=%s, nickname=%s", v.No, v.Name, v.NickName)
+	}
+
+}
 ```
+
 
 ### HashMap
 #### 链表法实现hashMap
