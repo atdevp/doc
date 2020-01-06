@@ -35,6 +35,10 @@
         - [HashMap](#hashmap)
             - [链表法实现hashMap](#链表法实现hashmap)
         - [Golang排序算法对比](#golang排序算法对比)
+            - [冒泡排序](#冒泡排序)
+            - [选择排序](#选择排序)
+            - [归并排序](#归并排序)
+            - [快速排序](#快速排序)
         - [结构体(struct)](#结构体struct)
             - [定义结构体](#定义结构体)
             - [实例化结构体](#实例化结构体)
@@ -716,6 +720,7 @@ func main() {
 <p> 按耗时排序
 <p>冒泡>选择>快排
 
+#### 冒泡排序
 ```
 package main
 
@@ -737,6 +742,9 @@ func bubbleSort(list []int) []int {
 	return list
 }
 
+```
+#### 选择排序
+```
 func selectSort(list []int) []int {
 	for i := 0; i < len(list); i++ {
 		min := i
@@ -749,7 +757,10 @@ func selectSort(list []int) []int {
 	}
 	return list
 }
+```
+#### 归并排序
 
+```
 func merge(left, right []int) []int {
 	m, n := 0, 0
 	result := make([]int, 0)
@@ -788,26 +799,50 @@ func mergeSort(list []int) []int {
 	return merge(left, right)
 }
 
-func decorator(f func(list []int) []int) func(list []int) []int {
-	return func(list []int) []int {
-		s := time.Now()
-		back := f(list)
-		e := time.Now()
-		log.Println("total time: ", e.Sub(s))
-		return back
-	}
-}
-func main() {
+```
+#### 快速排序
+```
+package main
 
-	list := <FROM big_int.go>
-	decorator(bubbleSort)(list)
-	decorator(selectSort)(list)
-	decorator(mergeSort)(list)
+import "fmt"
+
+func QuickSort(alist []int, left, right int) {
+	if left >= right {
+		return
+	}
+
+	pivot := alist[left]
+
+	low := left
+	high := right
+
+	for low < high {
+
+		for low < high && alist[high] >= pivot {
+			high--
+		}
+
+		alist[low] = alist[high]
+
+		for low < high && alist[low] <= pivot {
+			low++
+		}
+		alist[high] = alist[low]
+	}
+
+	alist[low] = pivot
+
+	QuickSort(alist, left, low-1)
+	QuickSort(alist, high+1, right)
 }
-输出：
-2019/12/30 17:36:48 total time:  131.70125ms
-2019/12/30 17:36:48 total time:  47.763079ms
-2019/12/30 17:36:48 total time:  4.523114ms
+
+func main() {
+	alist := []int{54, 26, 93, 17, 77, 31, 44, 55, 20, 26, 31}
+	fmt.Println(alist)
+	QuickSort(alist, 0, len(alist)-1)
+	fmt.Println(alist)
+
+}
 ```
 
 ### 结构体(struct)
