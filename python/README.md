@@ -14,6 +14,7 @@
         - [冒泡](#冒泡)
         - [选择](#选择)
         - [归并](#归并)
+        - [快排](#快排)
     - [数据结构-链表](#数据结构-链表)
     - [TODO](#todo)
 
@@ -251,6 +252,35 @@ def merge(left, right):
 
 l = [12, 234, 345345, 456456, 29]
 print(mergesort(l))
+```
+### 快排
+```
+def quickSort(alist, left, right):
+    if left >= right:
+        return
+
+    pivot = alist[left]
+
+    low = left
+    high = right
+
+    while low < high:
+        while low < high and alist[high] >= pivot:
+            high -= 1
+        alist[low] = alist[high]
+
+        while low < high and alist[low] <= pivot:
+            low += 1
+        alist[high] = alist[low]
+
+    alist[low] = pivot
+    quickSort(alist, left, low - 1)
+    quickSort(alist, high + 1, right)
+
+
+alist = [54, 26, 93, 17, 77, 31, 44, 55, 20, 26, 31]
+quickSort(alist, 0, len(alist) - 1)
+print(alist)
 ```
 
 ## 数据结构-链表
