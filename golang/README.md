@@ -30,8 +30,9 @@
             - [删除map中指定key](#删除map中指定key)
             - [遍历map](#遍历map)
             - [清空map](#清空map)
-        - [单链表](#单链表)
-            - [单链表create、append、list、delete方法](#单链表createappendlistdelete方法)
+        - [单链表(带空表头)](#单链表带空表头)
+            - [示意图](#示意图)
+            - [操作](#操作)
         - [HashMap](#hashmap)
             - [链表法实现hashMap](#链表法实现hashmap)
         - [Golang排序算法对比](#golang排序算法对比)
@@ -365,259 +366,141 @@ func main() {
 go语言中没有提供任何清空所有元素的函数和方法。清空map的唯一办法是重新make一个新的map。不用担心垃圾回收的效率，因为效率很高。
 ```
 
-### 单链表
-#### 单链表create、append、list、delete方法
+### 单链表(带空表头)
+#### 示意图
+> 说明： 一般来说，为了较好的对单链表进行增删改查，我们都会给他设置一个头结点，头结点不存放数据，主要作用是用来表示标识链表头。
+![github](img/head_link.png)
 
+
+
+#### 操作
 ```
-被调用：
-package link
-
-type LinkedHeroList struct {
-	No       int
-	Name     string
-	NickName string
-	Next     *LinkedHeroList
-}
-
-func NewLinkedHeroList() *LinkedHeroList {
-	return &LinkedHeroList{}
-}
-
-func (this *LinkedHeroList) Append(node *LinkedHeroList) {
-	temp := this
-	for {
-		if temp.Next == nil {
-			break
-		}
-		temp = temp.Next
-	}
-
-	temp.Next = node
-
-}
-
-func (this *LinkedHeroList) IsEmpty() bool {
-	temp := this
-	if temp.Next == nil {
-		return true
-	}
-	return false
-}
-
-func (this *LinkedHeroList) List() []*LinkedHeroList {
-
-	if this.IsEmpty() {
-		return []*LinkedHeroList{}
-	}
-
-	temp := this
-
-	ret := make([]*LinkedHeroList, 0)
-	for {
-		ret = append(ret, temp.Next)
-		temp = temp.Next
-		if temp.Next == nil {
-			break
-		}
-
-        }
-	}
-
-	return ret
-}
-
-func (this *LinkedHeroList) OrderInsert(node *LinkedHeroList) {
-	temp := this
-	// 思想是让插入的节点No,和temp的下一个节点No进行比较
-	for {
-		if temp.Next == nil {
-			break
-		}
-		if temp.Next.No >= node.No {
-			break
-		}
-		temp = temp.Next
-	}
-
-	node.Next = temp.Next
-	temp.Next = node
-}
-
-func (this *LinkedHeroList) Delete(no int) {
-	if this.IsEmpty() {
-		return
-	}
-
-	temp := this
-	for {
-		if temp.Next == nil {
-			return
-		}
-		if temp.Next.No == no {
-			break
-		}
-		temp = temp.Next
-
-	}
-	temp.Next = temp.Next.Next
-}
-ad:link ad$ vim link.go
-ad:link ad$ cat link.go
-package link
-
-type LinkedHeroList struct {
-	No       int
-	Name     string
-	NickName string
-	Next     *LinkedHeroList
-}
-
-func NewLinkedHeroList() *LinkedHeroList {
-	return &LinkedHeroList{}
-}
-
-func (this *LinkedHeroList) Append(node *LinkedHeroList) {
-	temp := this
-	for {
-		if temp.Next == nil {
-			break
-		}
-		temp = temp.Next
-	}
-
-	temp.Next = node
-
-}
-
-func (this *LinkedHeroList) IsEmpty() bool {
-	temp := this
-	if temp.Next == nil {
-		return true
-	}
-	return false
-}
-
-func (this *LinkedHeroList) List() []*LinkedHeroList {
-
-	if this.IsEmpty() {
-		return []*LinkedHeroList{}
-	}
-
-	temp := this
-
-	ret := make([]*LinkedHeroList, 0)
-	for {
-		ret = append(ret, temp.Next)
-		temp = temp.Next
-		if temp.Next == nil {
-			break
-		}
-	}
-
-	return ret
-}
-
-func (this *LinkedHeroList) OrderInsert(node *LinkedHeroList) {
-	temp := this
-	// 思想是让插入的节点No,和temp的下一个节点No进行比较
-	for {
-		if temp.Next == nil {
-			break
-		}
-		if temp.Next.No >= node.No {
-			break
-		}
-		temp = temp.Next
-	}
-
-	node.Next = temp.Next
-	temp.Next = node
-}
-
-func (this *LinkedHeroList) Delete(no int) {
-	if this.IsEmpty() {
-		return
-	}
-
-	temp := this
-	// 思想是让插入的节点No,和temp的下一个节点No进行比较
-	for {
-		if temp.Next == nil {
-			return
-		}
-		if temp.Next.No == no {
-			break
-		}
-		temp = temp.Next
-
-	}
-	temp.Next = temp.Next.Next
-}
-
-调用者：
 package main
 
-import (
-	"link"
-	"log"
-)
+import "fmt"
 
-func init() {
-	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+type HeroNode struct {
+	No       int
+	Name     string
+	NickName string
+	Next     *HeroNode
+}
+
+// 头结点不需要给值，默认都是空值
+func NewHeadHeroNode() *HeroNode {
+	return &HeroNode{}
+}
+
+// 尾部插入
+func (this *HeroNode) Append(node *HeroNode) {
+	temp := this
+	for {
+		if temp.Next == nil {
+			break
+		}
+		temp = temp.Next
+	}
+
+	temp.Next = node
+}
+
+// 按id顺序插入 经典问题
+func (this *HeroNode) Insert(node *HeroNode) {
+	temp := this
+
+	for {
+		if temp.Next == nil {
+			break
+		}
+		if temp.Next.No > node.No {
+			break
+		}
+
+		temp = temp.Next
+	}
+
+	node.Next = temp.Next
+	temp.Next = node
+}
+
+// 经典问题
+func (this *HeroNode) Remove(no int) {
+	temp := this
+
+	for {
+		if temp.Next == nil {
+			break
+		}
+		if temp.Next.No == no {
+			break
+		}
+		temp = temp.Next
+	}
+
+	temp.Next = temp.Next.Next
+
+}
+
+func (this *HeroNode) IsEmpty() bool {
+	return this.Next == nil
+}
+
+func (this *HeroNode) List() {
+	temp := this
+	for {
+		if temp.Next == nil {
+			break
+		}
+		fmt.Println(temp.Next.No, temp.Next.Name, temp.Next.NickName)
+		temp = temp.Next
+	}
+
 }
 
 func main() {
 
-	singe := link.NewLinkedHeroList()
+	hero := NewHeadHeroNode()
 
-	hero1 := &link.LinkedHeroList{
+	p1 := &HeroNode{
 		No:       1,
 		Name:     "宋江",
 		NickName: "及时雨",
 	}
 
-	hero2 := &link.LinkedHeroList{
-		No:       5,
+	p2 := &HeroNode{
+		No:       2,
 		Name:     "吴用",
 		NickName: "智多星",
 	}
 
-	hero3 := &link.LinkedHeroList{
-		No:       2,
-		Name:     "鲁智深",
-		NickName: "花和尚",
+	p3 := &HeroNode{
+		No:       5,
+		Name:     "李逵",
+		NickName: "黑旋风",
 	}
 
-	hero4 := &link.LinkedHeroList{
-		No:       6,
-		Name:     "卢俊义",
-		NickName: "玉麒麟",
-	}
-	hero5 := &link.LinkedHeroList{
-		No:       1000,
-		Name:     "林冲",
-		NickName: "豹子头",
+	p4 := &HeroNode{
+		No:       4,
+		Name:     "a",
+		NickName: "a1",
 	}
 
-	singe.OrderInsert(hero1)
-	singe.OrderInsert(hero2)
-	singe.OrderInsert(hero3)
-	singe.OrderInsert(hero4)
-	singe.OrderInsert(hero5)
+	fmt.Println("链表是否为空: ", hero.IsEmpty())
+	hero.Append(p1)
+	hero.Append(p2)
+	hero.Append(p3)
+	hero.Insert(p4)
+	fmt.Println("链表是否为空: ", hero.IsEmpty())
 
-	ret := singe.List()
-	for _, v := range ret {
-		log.Printf("no=%d, name=%s, nickname=%s", v.No, v.Name, v.NickName)
-	}
+	fmt.Println("链表List:")
+	hero.List()
 
-	singe.Delete(1000)
-
-	ret = singe.List()
-	for _, v := range ret {
-		log.Printf("no=%d, name=%s, nickname=%s", v.No, v.Name, v.NickName)
-	}
+	hero.Remove(2)
+	fmt.Println("删除")
+	hero.List()
 
 }
+
 ```
 
 
@@ -716,9 +599,6 @@ func main() {
 
 ```
 ### Golang排序算法对比
-> 冒泡、选择、快排
-<p> 按耗时排序
-<p>冒泡>选择>快排
 
 #### 冒泡排序
 ```
