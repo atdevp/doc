@@ -1,5 +1,12 @@
 # Djnago web 框架
+<!-- TOC -->
 
+- [Djnago web 框架](#djnago-web-%e6%a1%86%e6%9e%b6)
+  - [Model层](#model%e5%b1%82)
+    - [字段类型](#%e5%ad%97%e6%ae%b5%e7%b1%bb%e5%9e%8b)
+    - [Field选项](#field%e9%80%89%e9%a1%b9)
+
+<!-- /TOC -->
 ## Model层
 
 ### 字段类型
@@ -86,6 +93,7 @@ HOST_CHOICES=((1, "virtual"),(2, "phyical"))
 第一个值是实际存储的值，第二个用来方便进行选择
 ```
 * db_index
+* db_column
 * default
 * editable
 
