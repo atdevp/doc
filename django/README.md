@@ -105,6 +105,42 @@ HOST_CHOICES=((1, "virtual"),(2, "phyical"))
 * unique
 *
 
+
+## 基于函数的API视图,重点用到了DRF的装饰器
+```
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Reponse
+from rest_framework.perssions import IsAdminUser, IsAuthenticated
+
+@permission_classes('IsAdminUser', 'IsAuthencticated')
+@api_view(http_method_names=['GET', 'POST']) # @api_view(['GET', 'POST'])
+def user_list(request):
+    users = UserModel.objects.all()
+    return Reponse(data=users, status_code=)  
+
+```
+
+## 基于类视图
+
+```
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.perssions import IsAdminUser, IsAuthenticated
+
+class UserList(APIView):
+    
+    # 可插拔的API策略属性
+    permisson_classes = [IsAdminUser, IsAuthenticated,]
+    authentication_classes = []
+    
+    def get(self, request, format=None):
+        pass
+
+    def post(self, request, format=None):
+        pass
+
+```
+
 ## Permissions
 ### 基本权限类 permissions.BasePermission
 * IsAuthenticated
