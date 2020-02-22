@@ -43,9 +43,8 @@
 ### string类型
 
 ```
-
-
-
+set(k,v nx=True|False)
+get(k)
 ```
 
 ### list类型
@@ -113,10 +112,11 @@ c.hlen(key) => 4
 
 ```
 
-
-
-
 ## Redis使用场景
+
+### Redis连接池使用
+
+
 ### 分布式锁
 ```
 import redis
