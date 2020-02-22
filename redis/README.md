@@ -63,10 +63,13 @@ rpop(key) 右取
 lpop(key) 左取
 
 # 列表长度 
-llen(key) 
+llen(key) O(1)
+
+# 获取指定索引的元素
+lindex(key, 2) O(n)
 
 # 获取区间元素 
-lrange(key, start, end) 
+lrange(key, start, end) O(n)
 
 # 读旧右插新左
 lpush("a", 1,2,3,4,5,)
