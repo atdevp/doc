@@ -1,3 +1,30 @@
+<!-- TOC -->
+
+- [使用kubeadm 安装k8s非高可用版本](#%e4%bd%bf%e7%94%a8kubeadm-%e5%ae%89%e8%a3%85k8s%e9%9d%9e%e9%ab%98%e5%8f%af%e7%94%a8%e7%89%88%e6%9c%ac)
+  - [安装](#%e5%ae%89%e8%a3%85)
+    - [部署规划<allnode>](#%e9%83%a8%e7%bd%b2%e8%a7%84%e5%88%92allnode)
+    - [环境初始化<allnode>](#%e7%8e%af%e5%a2%83%e5%88%9d%e5%a7%8b%e5%8c%96allnode)
+    - [配置hosts<allnode>](#%e9%85%8d%e7%bd%aehostsallnode)
+    - [Netfilter配置<allnode>](#netfilter%e9%85%8d%e7%bd%aeallnode)
+    - [开启kube-proxy的ipvs代理功能<allnode>](#%e5%bc%80%e5%90%afkube-proxy%e7%9a%84ipvs%e4%bb%a3%e7%90%86%e5%8a%9f%e8%83%bdallnode)
+    - [关闭swap<allnode>](#%e5%85%b3%e9%97%adswapallnode)
+    - [内核升级<allnode>](#%e5%86%85%e6%a0%b8%e5%8d%87%e7%ba%a7allnode)
+    - [安装Docker服务<allnode>](#%e5%ae%89%e8%a3%85docker%e6%9c%8d%e5%8a%a1allnode)
+    - [安装k8s套件（kubeadm、kubelet、kubectl）<allnode>](#%e5%ae%89%e8%a3%85k8s%e5%a5%97%e4%bb%b6kubeadmkubeletkubectlallnode)
+    - [下载k8s服务依赖的镜像<allnode>](#%e4%b8%8b%e8%bd%bdk8s%e6%9c%8d%e5%8a%a1%e4%be%9d%e8%b5%96%e7%9a%84%e9%95%9c%e5%83%8fallnode)
+    - [配置harbor仓库<harbornode>](#%e9%85%8d%e7%bd%aeharbor%e4%bb%93%e5%ba%93harbornode)
+    - [为docker服务添加本地仓库<allnode>](#%e4%b8%badocker%e6%9c%8d%e5%8a%a1%e6%b7%bb%e5%8a%a0%e6%9c%ac%e5%9c%b0%e4%bb%93%e5%ba%93allnode)
+    - [安装flannel网络组建<allnode>](#%e5%ae%89%e8%a3%85flannel%e7%bd%91%e7%bb%9c%e7%bb%84%e5%bb%baallnode)
+    - [master节点初始化<k8smasternode>](#master%e8%8a%82%e7%82%b9%e5%88%9d%e5%a7%8b%e5%8c%96k8smasternode)
+    - [配置kubectl连接k8s apiserver的权限<allworker>](#%e9%85%8d%e7%bd%aekubectl%e8%bf%9e%e6%8e%a5k8s-apiserver%e7%9a%84%e6%9d%83%e9%99%90allworker)
+    - [worker节点加入集群](#worker%e8%8a%82%e7%82%b9%e5%8a%a0%e5%85%a5%e9%9b%86%e7%be%a4)
+    - [集群节点查看](#%e9%9b%86%e7%be%a4%e8%8a%82%e7%82%b9%e6%9f%a5%e7%9c%8b)
+  - [测试](#%e6%b5%8b%e8%af%95)
+    - [登录harbor仓库测试<任意node>](#%e7%99%bb%e5%bd%95harbor%e4%bb%93%e5%ba%93%e6%b5%8b%e8%af%95%e4%bb%bb%e6%84%8fnode)
+    - [镜像推送测试<任意node>](#%e9%95%9c%e5%83%8f%e6%8e%a8%e9%80%81%e6%b5%8b%e8%af%95%e4%bb%bb%e6%84%8fnode)
+    - [镜像下载测试<任意node>](#%e9%95%9c%e5%83%8f%e4%b8%8b%e8%bd%bd%e6%b5%8b%e8%af%95%e4%bb%bb%e6%84%8fnode)
+
+<!-- /TOC -->
 # 使用kubeadm 安装k8s非高可用版本
 
 ## 安装
