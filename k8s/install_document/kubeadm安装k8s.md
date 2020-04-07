@@ -4,7 +4,7 @@
   - [安装](#%e5%ae%89%e8%a3%85)
     - [部署规划<allnode>](#%e9%83%a8%e7%bd%b2%e8%a7%84%e5%88%92allnode)
     - [环境初始化<allnode>](#%e7%8e%af%e5%a2%83%e5%88%9d%e5%a7%8b%e5%8c%96allnode)
-    - [配置hosts<allnode>](#%e9%85%8d%e7%bd%aehostsallnode)
+    - [配置hosts <allnode>](#%e9%85%8d%e7%bd%aehosts-allnode)
     - [Netfilter配置<allnode>](#netfilter%e9%85%8d%e7%bd%aeallnode)
     - [开启kube-proxy的ipvs代理功能<allnode>](#%e5%bc%80%e5%90%afkube-proxy%e7%9a%84ipvs%e4%bb%a3%e7%90%86%e5%8a%9f%e8%83%bdallnode)
     - [关闭swap<allnode>](#%e5%85%b3%e9%97%adswapallnode)
@@ -46,7 +46,7 @@ setenforce 0
 sed -i "s/SELINUX=enforcing/SELINUX=disabled/g" /etc/selinux/config
 ```
 
-### 配置hosts<allnode>
+### 配置hosts <allnode>
 ```
 cat  /etc/hosts
 
