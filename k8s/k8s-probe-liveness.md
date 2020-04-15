@@ -12,3 +12,13 @@
 * HTTPGetAction
 > 对容器IP发送http的get请求，如果状态码满足400>code>=200，认为本次诊断ok，反之不ok。
 
+### 探测结果
+* success
+* failed
+* unkown 诊断失败，不采取措施
+
+
+### liveness
+> 称之为持续检测，检测容器运行过程中提供检测。
+
+### 
