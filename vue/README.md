@@ -39,3 +39,5 @@ npm install -g @vue/cli-init
 ## 安装依赖
 * axios
 
+## VsCode配置代码格式化
+* https://www.jianshu.com/p/f15b67c94c78
