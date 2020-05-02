@@ -2,11 +2,44 @@
 <!-- TOC -->
 
 - [Djnago web 框架](#djnago-web-%e6%a1%86%e6%9e%b6)
+  - [跨域](#%e8%b7%a8%e5%9f%9f)
   - [Model层](#model%e5%b1%82)
     - [字段类型](#%e5%ad%97%e6%ae%b5%e7%b1%bb%e5%9e%8b)
     - [Field选项](#field%e9%80%89%e9%a1%b9)
+  - [基于函数的API视图,重点用到了DRF的装饰器](#%e5%9f%ba%e4%ba%8e%e5%87%bd%e6%95%b0%e7%9a%84api%e8%a7%86%e5%9b%be%e9%87%8d%e7%82%b9%e7%94%a8%e5%88%b0%e4%ba%86drf%e7%9a%84%e8%a3%85%e9%a5%b0%e5%99%a8)
+  - [基于类视图](#%e5%9f%ba%e4%ba%8e%e7%b1%bb%e8%a7%86%e5%9b%be)
+  - [Permissions和Authentications](#permissions%e5%92%8cauthentications)
+    - [Permissions](#permissions)
+    - [Authentications](#authentications)
+    - [自定义权限类](#%e8%87%aa%e5%ae%9a%e4%b9%89%e6%9d%83%e9%99%90%e7%b1%bb)
+  - [Pagination](#pagination)
+    - [PageNumberPagination](#pagenumberpagination)
+    - [LimitOffsetPagination](#limitoffsetpagination)
+    - [CustomPagination](#custompagination)
 
 <!-- /TOC -->
+## 跨域
+* django自身解决
+  - `安装插件`
+    ```
+    pip3  install django-cors-headers
+    ```
+
+  - `更新配置`
+
+    ```
+    INSTALLED_APPS = [
+        "corsheaders"
+    ]
+
+    CORS_ORIGIN_ALLOW_ALL = True
+
+    MIDDLEWARE = [
+        <!-- 必须在CsrfViewMiddleware、CommonMiddleware之前 -->
+        "corsheaders.middleware.CorsMiddleware"
+    ]
+    ```
+
 ## Model层
 
 ### 字段类型
