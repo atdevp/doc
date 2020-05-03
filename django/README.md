@@ -3,6 +3,7 @@
 
 - [Djnago web 框架](#djnago-web-%e6%a1%86%e6%9e%b6)
   - [跨域](#%e8%b7%a8%e5%9f%9f)
+  - [分页和搜索功能](#%e5%88%86%e9%a1%b5%e5%92%8c%e6%90%9c%e7%b4%a2%e5%8a%9f%e8%83%bd)
   - [Model层](#model%e5%b1%82)
     - [字段类型](#%e5%ad%97%e6%ae%b5%e7%b1%bb%e5%9e%8b)
     - [Field选项](#field%e9%80%89%e9%a1%b9)
@@ -39,6 +40,68 @@
         "corsheaders.middleware.CorsMiddleware"
     ]
     ```
+
+## 分页和搜索功能
+* 分页和搜索
+ - 示例 `127.0.0.1:8000/api/v1/users/list.go?pagenum=1&pagesize=1&search=c@test.com`
+
+  - 自定义分页
+
+  ```
+  class MyPagination(PageNumberPagination):
+    page_size = 10
+    # 参数名和请求参数对应
+    page_size_query_param = 'pagesize'
+    # 参数名和请求参数对应
+    page_query_param = 'pagenum'
+
+    def get_paginated_response(self, data):
+        from collections import OrderedDict
+        return Response(
+            OrderedDict([('count', self.page.paginator.count),
+                         ('results', data)]))
+  ```
+
+  - 搜索
+  
+  ```
+  search_class = filters.SearchFilter()
+
+  users = UserModel.objects.all()
+
+  self.search_fields = ['email', 'mobile']
+
+  search_query = search_class.filter_queryse(request, users, self)
+
+  # 这里所有也是有关键字参数名search
+  
+  ```
+
+  - view应用
+  ```
+  def get(self, request, format=None):
+        pagination_class = MyPagination()
+        search_class = filters.SearchFilter()
+
+        users = UserModel.objects.all()
+
+        self.search_fields = ['email', 'mobile']
+
+        search_query = search_class.filter_queryset(request, users, self)
+        page_query = pagination_class.paginate_queryset(queryset=search_query,
+                                                        request=request,
+                                                        view=self)
+
+        sz = UserModelSerializer(page_query, many=True)
+
+        return JsonResponse(code=200, msg="success", data=sz.data)
+
+  ```
+
+
+
+
+
 
 ## Model层
 
